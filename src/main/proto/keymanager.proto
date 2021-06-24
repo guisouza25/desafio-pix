@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.zup";
+option java_outer_classname = "Keymanager";
+option objc_class_prefix = "HLW";
+
+package br.com.zup;
+
+/**
+ * Registra chave
+ */
+service KeymanagerRegistraService {
+  rpc registra (RegistraChavePixRequest) returns (RegistraChavePixResponse) {}
+}
+message RegistraChavePixRequest {
+  string clienteId        = 1;
+  TipoChave tipoChave = 2;
+  string chave            = 3;
+  TipoConta tipoConta = 4;
+}
+message RegistraChavePixResponse {
+  string clienteId = 1;
+  string pixId     = 2;
+}
+
+enum TipoChave {
+  UNKNOWN_TIPO_CHAVE = 0;
+  CPF = 1;
+  CELULAR = 2;
+  EMAIL = 3;
+  ALEATORIA = 4;
+}
+
+enum TipoConta {
+  UNKNOWN_TIPO_CONTA = 0;
+  CONTA_CORRENTE     = 1;
+  CONTA_POUPANCA     = 2;
+}

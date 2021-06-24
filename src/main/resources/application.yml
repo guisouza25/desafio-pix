@@ -1,0 +1,20 @@
+micronaut:
+  application:
+    name: keymanager
+
+grpc:
+  server:
+    port: ${SERVER_PORT:50051}
+    keep-alive-time: 1h
+    max-inbound-message-size: 1024
+
+datasources:
+  default:
+    url: jdbc:mysql://localhost:3306/pix_desafio?serverTimezone=America/Sao_Paulo
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: guuuih25
+    schema-generate: CREATE_DROP
+    dialect: MYSQL
+jpa.default.properties.hibernate.hbm2ddl.auto: update
+jpa.default.properties.hibernate.hbm2ddl.show_sql: true
