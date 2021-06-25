@@ -1,6 +1,7 @@
 package br.com.zup.pix
 
 import br.com.zup.*
+import br.com.zup.shared.errors.ErrorHandler
 import io.grpc.stub.StreamObserver
 import java.util.*
 import javax.inject.Inject
@@ -10,7 +11,7 @@ import javax.validation.Validator
 import javax.validation.groups.Default
 
 @Singleton
-//@ErrorHandler
+@ErrorHandler
 class RegistraChavePixEndpoint(
     @Inject val validator: Validator
 ) : KeymanagerRegistraServiceGrpc.KeymanagerRegistraServiceImplBase() {

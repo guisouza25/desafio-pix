@@ -1,4 +1,4 @@
-package br.com.zup.errors.handlers
+package br.com.zup.shared.errors.handlers
 
 import io.grpc.Status
 

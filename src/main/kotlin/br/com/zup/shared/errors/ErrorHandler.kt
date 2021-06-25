@@ -1,4 +1,4 @@
-package br.com.zup.errors
+package br.com.zup.shared.errors
 
 import io.micronaut.aop.Around
 import io.micronaut.context.annotation.Type

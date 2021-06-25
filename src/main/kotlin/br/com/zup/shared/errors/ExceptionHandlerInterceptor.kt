@@ -1,6 +1,6 @@
-package br.com.zup.errors
+package br.com.zup.shared.errors
 
-import br.com.zup.errors.handlers.ExceptionHandler
+import br.com.zup.shared.errors.handlers.ExceptionHandler
 import io.grpc.BindableService
 import io.grpc.stub.StreamObserver
 import io.micronaut.aop.MethodInterceptor

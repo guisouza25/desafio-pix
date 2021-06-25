@@ -1,7 +1,7 @@
-package br.com.zup.errors
+package br.com.zup.shared.errors
 
-import br.com.zup.errors.handlers.DefaultExceptionHandler
-import br.com.zup.errors.handlers.ExceptionHandler
+import br.com.zup.shared.errors.handlers.DefaultExceptionHandler
+import br.com.zup.shared.errors.handlers.ExceptionHandler
 import javax.inject.Inject
 import javax.inject.Singleton
 

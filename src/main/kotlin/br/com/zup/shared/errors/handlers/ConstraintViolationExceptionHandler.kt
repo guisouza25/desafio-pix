@@ -1,4 +1,4 @@
-package br.com.zup.errors.handlers
+package br.com.zup.shared.errors.handlers
 
 import com.google.protobuf.Any
 import com.google.rpc.BadRequest

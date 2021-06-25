@@ -2,6 +2,7 @@ package br.com.zup.pix
 
 import br.com.zup.TipoChave
 import br.com.zup.TipoConta
+import br.com.zup.shared.validators.ValidUUID
 import io.micronaut.core.annotation.Introspected
 import org.hibernate.annotations.GenericGenerator
 import java.time.LocalDateTime
@@ -14,7 +15,8 @@ import javax.validation.constraints.NotNull
 @Entity
 @Introspected
 class ChavePix(
-    @field:NotBlank
+
+    @field:NotBlank @field:ValidUUID
     val clienteId: String,
 
     @field:NotNull
