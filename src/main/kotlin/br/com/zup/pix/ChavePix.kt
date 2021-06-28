@@ -2,17 +2,17 @@ package br.com.zup.pix
 
 import br.com.zup.TipoChave
 import br.com.zup.TipoConta
+import br.com.zup.integration.itau.ContaClientResponse
 import br.com.zup.shared.validators.ValidUUID
 import io.micronaut.core.annotation.Introspected
 import org.hibernate.annotations.GenericGenerator
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 @Entity
+@ChaveValida
 @Introspected
 class ChavePix(
 
@@ -20,11 +20,14 @@ class ChavePix(
     val clienteId: String,
 
     @field:NotNull
+    @Enumerated(EnumType.STRING)
     val tipoChave: TipoChave?,
 
-    val chave: String?,
+    @field:NotBlank
+    val chave: String,
 
-    @NotNull
+    @field:NotNull
+    @Enumerated(EnumType.STRING)
     val tipoConta: TipoConta?
 ) {
 
@@ -32,10 +35,18 @@ class ChavePix(
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     val id: String? = null
 
-    val criadoEm = LocalDateTime.now()
+    @Embedded
+    var conta: ContaAssociada? = null
+        private set
+
+    val criadoEm: LocalDateTime = LocalDateTime.now()
 
 
     override fun toString(): String {
         return "ChavePix(clienteId='$clienteId', tipoChave=$tipoChave, chave='$chave', tipoConta=$tipoConta, id=$id, criadoEm=$criadoEm)"
+    }
+
+    fun associaConta(conta: ContaAssociada) {
+        this.conta = conta
     }
 }

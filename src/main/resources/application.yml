@@ -18,3 +18,7 @@ datasources:
     dialect: MYSQL
 jpa.default.properties.hibernate.hbm2ddl.auto: update
 jpa.default.properties.hibernate.hbm2ddl.show_sql: true
+
+itau:
+  contas:
+    url: ${ITAU_URL:`http://localhost:9091`}
