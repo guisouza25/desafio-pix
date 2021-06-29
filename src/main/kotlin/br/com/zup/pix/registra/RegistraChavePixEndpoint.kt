@@ -1,9 +1,11 @@
-package br.com.zup.pix
+package br.com.zup.pix.registra
 
 import br.com.zup.KeymanagerRegistraServiceGrpc
 import br.com.zup.RegistraChavePixRequest
 import br.com.zup.RegistraChavePixResponse
 import br.com.zup.integration.itau.ContasItauClient
+import br.com.zup.pix.ChavePixRepository
+import br.com.zup.pix.toModel
 import br.com.zup.shared.errors.ErrorHandler
 import io.grpc.stub.StreamObserver
 import javax.inject.Inject
@@ -35,7 +37,12 @@ class RegistraChavePixEndpoint(
         chavePix.associaConta(conta)
         repository.save(chavePix)
 
-        println(chavePix.toString())
+        responseObserver?.onNext(
+            RegistraChavePixResponse.newBuilder()
+                .setClienteId(chavePix.clienteId)
+                .setPixId(chavePix.id)
+                .build())
+        responseObserver?.onCompleted()
     }
 }
 
