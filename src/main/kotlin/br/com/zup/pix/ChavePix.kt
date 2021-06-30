@@ -28,7 +28,8 @@ class ChavePix(
 
     @field:NotNull
     @Enumerated(EnumType.STRING)
-    val tipoConta: TipoConta?
+    val tipoConta: TipoConta?,
+
 ) {
 
     @Id @GeneratedValue(generator = "UUID")

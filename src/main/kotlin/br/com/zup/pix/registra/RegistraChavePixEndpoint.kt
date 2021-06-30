@@ -29,10 +29,10 @@ class RegistraChavePixEndpoint(
         val constrains = validator.validate(chavePix, Default::class.java)
         if (constrains.isNotEmpty()) throw ConstraintViolationException(constrains)
 
-        if (repository.existsByChave(chavePix.chave)) throw IllegalStateException("Chave pix já existente")
+        if (repository.existsByChave(chavePix.chave)) throw IllegalStateException("chave pix já existente")
 
         val response = itauClient.buscaContaPorTipo(chavePix.clienteId, chavePix.tipoConta!!.name)
-        val conta = response?.body().toModel() ?: throw IllegalStateException("Cliente não encontrado no Itau")
+        val conta = response.body()?.toModel() ?: throw IllegalStateException("cliente não encontrado no Itau")
 
         chavePix.associaConta(conta)
         repository.save(chavePix)
