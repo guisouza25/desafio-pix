@@ -24,6 +24,21 @@ message RegistraChavePixResponse {
   string pixId     = 2;
 }
 
+/**
+ * Remove chave
+ */
+service KeymanagerRemoveService {
+  rpc remove (RemoveChavePixRequest) returns (RemoveChavePixResponse) {}
+}
+message RemoveChavePixRequest {
+  string pixId     = 1;
+  string clienteId = 2;
+}
+message RemoveChavePixResponse {
+  string pixId     = 1;
+  string clienteId = 2;
+}
+
 enum TipoChave {
   UNKNOWN_TIPO_CHAVE = 0;
   CPF = 1;
