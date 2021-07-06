@@ -24,7 +24,7 @@ class ChaveValidaValidator : ConstraintValidator<ChaveValida, ChavePix> {
 
     override fun isValid(
         value: ChavePix,
-        context: ConstraintValidatorContext
+        context: ConstraintValidatorContext?
     ): Boolean {
 
         val tipo = value.tipoChave
@@ -32,7 +32,7 @@ class ChaveValidaValidator : ConstraintValidator<ChaveValida, ChavePix> {
 
         if (tipo == null || chave.isNullOrBlank()) return true
 
-        return when (tipo) {
+        val valid = when (tipo) {
             TipoChave.CPF -> CPFValidator().run {
                 initialize(null)
                 isValid(chave, context)
@@ -43,6 +43,16 @@ class ChaveValidaValidator : ConstraintValidator<ChaveValida, ChavePix> {
 
             else -> true
         }
+
+        if(!valid) context?.setField("chave")
+
+        return valid
     }
 
+    private fun ConstraintValidatorContext.setField(fieldName: String) {
+        this.disableDefaultConstraintViolation()
+        this.buildConstraintViolationWithTemplate(this.defaultConstraintMessageTemplate)
+            .addPropertyNode(fieldName)
+            .addConstraintViolation()
+    }
 }
