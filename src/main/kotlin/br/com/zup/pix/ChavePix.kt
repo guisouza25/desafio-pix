@@ -17,14 +17,14 @@ import javax.validation.constraints.NotNull
 class ChavePix(
 
     @field:NotBlank @field:ValidUUID
-    val clienteId: String,
+    val clienteId: String?,
 
     @field:NotNull
     @Enumerated(EnumType.STRING)
     val tipoChave: TipoChave?,
 
     @field:NotBlank
-    val chave: String,
+    val chave: String?,
 
     @field:NotNull
     @Enumerated(EnumType.STRING)

@@ -11,6 +11,7 @@ import br.com.zup.integration.itau.TitularResponse
 import br.com.zup.pix.ChavePix
 import br.com.zup.pix.ChavePixRepository
 import br.com.zup.pix.ContaAssociada
+import br.com.zup.pix.violations
 import io.grpc.ManagedChannel
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
@@ -21,6 +22,7 @@ import io.micronaut.grpc.server.GrpcServerChannel
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -76,6 +78,29 @@ class RegistraChavePixEndpointTest(
     }
 
     @Test
+    fun `deve registrar uma chave pix quando tipo for aleatoria`() {
+
+        Mockito.`when`(itauClient.buscaContaPorTipo(CLIENTE_ID, "CONTA_CORRENTE"))
+            .thenReturn(HttpResponse.ok(contaClientResponse()))
+
+        val response = grpcClient
+            .registra(RegistraChavePixRequest.newBuilder()
+                .setClienteId(CLIENTE_ID)
+                .setTipoChave(TipoChave.ALEATORIA)
+                .setChave("")
+                .setTipoConta(TipoConta.CONTA_CORRENTE)
+                .build()
+            )
+        with(response) {
+            Assertions.assertNotNull(pixId)
+            Assertions.assertNotNull(repository.findById(pixId).get())
+            Assertions.assertTrue(repository.findById(pixId).get().chave!!.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$".toRegex()))
+            Assertions.assertEquals(clienteId, CLIENTE_ID)
+            Assertions.assertTrue(repository.existsById(pixId))
+        }
+    }
+
+    @Test
     fun `nao deve registrar uma chave quando ja existente`() {
 
         repository.save(chave(
@@ -120,6 +145,50 @@ class RegistraChavePixEndpointTest(
         with(thrown) {
             Assertions.assertEquals(status.code, Status.FAILED_PRECONDITION.code)
             Assertions.assertEquals(status.description, "cliente não encontrado no Itau")
+        }
+    }
+
+    @Test
+    fun `nao deve registrar uma chave quando dados forem invalidos`() {
+
+        val thrown = Assertions.assertThrows(StatusRuntimeException::class.java) {
+            grpcClient.registra(RegistraChavePixRequest.newBuilder().build())
+        }
+
+        with(thrown) {
+            Assertions.assertEquals(status.code, Status.INVALID_ARGUMENT.code)
+            Assertions.assertEquals(status.description, "Dados inválidos")
+            MatcherAssert.assertThat(violations(), org.hamcrest.Matchers.containsInAnyOrder(
+                Pair("clienteId", "não deve estar em branco"),
+                Pair("clienteId", "não é um formato válido de UUID"),
+                Pair("tipoChave", "não deve ser nulo"),
+                Pair("chave", "não deve estar em branco"),
+                Pair("tipoConta", "não deve ser nulo"),
+            ))
+
+        }
+    }
+
+    @Test
+    fun `nao deve registrar uma chave quando dados forem invalidos - chave invalida`() {
+
+        val thrown = Assertions.assertThrows(StatusRuntimeException::class.java) {
+            grpcClient.registra(RegistraChavePixRequest.newBuilder()
+                .setClienteId(CLIENTE_ID)
+                .setTipoChave(TipoChave.CPF)
+                .setChave("11122233344")
+                .setTipoConta(TipoConta.CONTA_CORRENTE)
+                .build())
+        }
+
+        with(thrown) {
+            Assertions.assertEquals(status.code, Status.INVALID_ARGUMENT.code)
+            Assertions.assertEquals(status.description, "Dados inválidos")
+            MatcherAssert.assertThat(violations(), org.hamcrest.Matchers.containsInAnyOrder(
+                Pair("chave", "chave Pix inválida (CPF)"),
+
+            ))
+
         }
     }
 

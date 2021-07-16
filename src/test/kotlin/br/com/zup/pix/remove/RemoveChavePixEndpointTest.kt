@@ -7,7 +7,6 @@ import br.com.zup.TipoConta
 import br.com.zup.pix.ChavePix
 import br.com.zup.pix.ChavePixRepository
 import br.com.zup.pix.ContaAssociada
-import br.com.zup.pix.registra.RegistraChavePixEndpointTest
 import br.com.zup.pix.violations
 import io.grpc.ManagedChannel
 import io.grpc.Status
@@ -61,7 +60,7 @@ class RemoveChavePixEndpointTest(
         with(response) {
             Assertions.assertEquals(clienteId, CHAVE_EXISTENTE.clienteId)
             Assertions.assertEquals(pixId, CHAVE_EXISTENTE.id)
-            Assertions.assertFalse(repository.existsByChave(CHAVE_EXISTENTE.chave))
+            Assertions.assertFalse(repository.existsByChave(CHAVE_EXISTENTE.chave!!))
         }
     }
 
@@ -96,6 +95,7 @@ class RemoveChavePixEndpointTest(
                     Pair("clienteId", "não deve estar em branco"),
                     Pair("pixId", "não é um formato válido de UUID"),
                     Pair("clienteId", "não é um formato válido de UUID"),
+                    Pair("chave", "não deve estar em branco"),
                 )
             )
         }
